@@ -62,6 +62,19 @@ class DevByteApplication : Application() {
                 repeatingRequest)
     }
 
+    val constraints = Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.UNMETERED)
+        .setRequiresBatteryNotLow(true)
+        .setRequiresCharging(true)
+        .apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                setRequiresDeviceIdle(true)
+            }
+        }.build()
+
+    val repeatingRequest = PeriodicWorkRequestBuilder<RefreshDataWorker>(1, TimeUnit.DAYS)
+        .setConstraints(constraints)
+        .build()
     /**
      * onCreate is called before the first screen is shown to the user.
      *
